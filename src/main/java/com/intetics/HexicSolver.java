@@ -1,15 +1,18 @@
 package com.intetics;
 
-import org.springframework.util.Assert;
-
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.Random;
 
 import static org.springframework.util.Assert.notNull;
 
 public class HexicSolver {
 
-    private final static Integer CELLS_COUNT = 85;
+    public final static Integer NUMBER_OF_CELLS = 85;
+    public final static Integer COLOR_INDEX = 6;
+    public final static Integer MIN_CELLS_IN_CLUSTER = 3;
+    public final static Integer NUMBER_OF_COLORS = 9;
+
+    private final static Random RANDOM = new Random(System.nanoTime());
 
     private final static String BOARD_TEMPLATE = "   _   _   _   _   _\n" +
             " _/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
@@ -135,9 +138,9 @@ public class HexicSolver {
     private String[] getColors(int[][] cells) {
         notNull(cells);
 
-        String[] result = new String[CELLS_COUNT];
-        for (int i = 0; i < CELLS_COUNT; i++)  {
-            result[i] = cells[i][6] == -1 ? " " : String.valueOf(cells[i][6]);
+        String[] result = new String[NUMBER_OF_CELLS];
+        for (int i = 0; i < NUMBER_OF_CELLS; i++)  {
+            result[i] = cells[i][COLOR_INDEX] == -1 ? " " : String.valueOf(cells[i][COLOR_INDEX]);
         }
 
         notNull(result);
@@ -150,10 +153,18 @@ public class HexicSolver {
     }
 
     public long calculatePoints(int numberOfConnectedCells) {
-        if (numberOfConnectedCells < 3) {
+        if (numberOfConnectedCells < MIN_CELLS_IN_CLUSTER) {
             return 0;
         }
 
-        return 3 * new BigDecimal(3).pow(numberOfConnectedCells - 3).longValueExact();
+        return 3 * new BigDecimal(3).pow(numberOfConnectedCells - MIN_CELLS_IN_CLUSTER).longValueExact();
+    }
+
+
+    public int[][] fillRandomColors(int[][] cells) {
+        for (int[] cell : cells) {
+            cell[COLOR_INDEX] = RANDOM.nextInt(NUMBER_OF_COLORS + 1);
+        }
+        return cells;
     }
 }
