@@ -160,7 +160,6 @@ public class HexicSolver {
         return 3 * new BigDecimal(3).pow(numberOfConnectedCells - MIN_CELLS_IN_CLUSTER).longValueExact();
     }
 
-
     public int[][] fillRandomColors(int[][] cells) {
         for (int[] cell : cells) {
             cell[COLOR_INDEX] = RANDOM.nextInt(NUMBER_OF_COLORS + 1);
