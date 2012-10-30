@@ -2,6 +2,9 @@ package com.intetics;
 
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import static org.springframework.util.Assert.notNull;
 
 public class HexicSolver {
@@ -144,5 +147,13 @@ public class HexicSolver {
     public int[][] getCells() {
         notNull(cells);
         return cells;
+    }
+
+    public long calculatePoints(int numberOfConnectedCells) {
+        if (numberOfConnectedCells < 3) {
+            return 0;
+        }
+
+        return 3 * new BigDecimal(3).pow(numberOfConnectedCells - 3).longValueExact();
     }
 }
