@@ -1,25 +1,31 @@
 package com.intetics;
 
+import org.springframework.util.Assert;
+
+import static org.springframework.util.Assert.notNull;
+
 public class HexicSolver {
 
+    private final static Integer CELLS_COUNT = 85;
+
     private final static String BOARD_TEMPLATE = "   _   _   _   _   _\n" +
-            " _/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
-            "/ \\_/ \\_/ \\_/ \\_/ \\_/\n" +
-            "\\_/ \\_/ \\_/ \\_/ \\_/ \\\n" +
+            " _/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
+            "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
+            "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
             "  \\_/ \\_/ \\_/ \\_/ \\_/";
 
     //Links section. Value - 0-based number of connected cell. -1 means 'no connections for that direction'.
@@ -120,6 +126,23 @@ public class HexicSolver {
     };
 
     public String getGameBoard() {
-        return BOARD_TEMPLATE;
+        return String.format(BOARD_TEMPLATE, getColors(getCells()));
+    }
+
+    private String[] getColors(int[][] cells) {
+        notNull(cells);
+
+        String[] result = new String[CELLS_COUNT];
+        for (int i = 0; i < CELLS_COUNT; i++)  {
+            result[i] = cells[i][6] == -1 ? " " : String.valueOf(cells[i][6]);
+        }
+
+        notNull(result);
+        return result;
+    }
+
+    public int[][] getCells() {
+        notNull(cells);
+        return cells;
     }
 }
