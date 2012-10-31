@@ -7,6 +7,7 @@
     <groupId>com.intetics</groupId>
     <artifactId>hexic-solver</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <build>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>

@@ -42,6 +42,7 @@ public class HexicSolver {
             "/%s\\_/%s\\_/%s\\_/%s\\_/%s\\_/\n" +
             "\\_/%s\\_/%s\\_/%s\\_/%s\\_/%s\\\n" +
             "  \\_/ \\_/ \\_/ \\_/ \\_/";
+    private static final String TOTAL_TEMPLATE = "Total: %s";
 
     //Links section. Value - 0-based number of connected cell. -1 means 'no connections for that direction'.
     //[0] - link #0
@@ -162,6 +163,116 @@ public class HexicSolver {
             { 70, 80, 75}, { 70, 76, 80}, { 71, 81, 76}, { 71, 77, 81}, { 72, 82, 77}, { 72, 78, 82}, { 73, 83, 78}, { 73, 79, 83}, { 74, 84, 79},
     };
 
+    public static void main(String[] args) {
+        HexicSolver solver = new HexicSolver();
+
+        System.out.println("/////////////// START  ///////////////");
+        System.out.println("Generating game board...");
+        System.out.println("Cells: " + NUMBER_OF_CELLS);
+        System.out.println("Cells in a cluster: " + MIN_CELLS_IN_CLUSTER);
+        System.out.println("Colors: " + NUMBER_OF_COLORS);
+        solver.fillRandomColors(solver.getCells());
+
+        long total = solver.solve();
+        System.out.println("/////////////// FINISH ///////////////");
+        System.out.println(String.format(TOTAL_TEMPLATE, total));
+        System.out.println(solver.getGameBoard());
+    }
+
+    public long solve() {
+        notNull(this.getCells());
+        isTrue(!hasClusters(this.getCells()));
+
+        long total = 0;
+        boolean turnFound = false;
+        long turn = 1;
+
+        do {
+            int rotations = 1;
+            List<Pair<Integer, Long>> turns = findTurns(copy(this.getCells()), rotations);
+
+            if (turns.isEmpty()) {
+                turns = findTurns(copy(this.getCells()), ++rotations);
+            }
+
+            if (turns.isEmpty()) {
+                turnFound = false;
+            } else {
+                System.out.println(String.format("==== Turn # %s started ===", turn));
+                turnFound = true;
+
+                System.out.println(this.getGameBoard());
+                System.out.println(String.format(TOTAL_TEMPLATE, total));
+
+                int bestRotationPoint = findBestTurn(turns).getFirst();
+                cells = rotateClockwise(cells, bestRotationPoint);
+                if (rotations == 2) {
+                    cells = rotateClockwise(cells, bestRotationPoint);
+                }
+                System.out.println(String.format("Rotate point %s: ", bestRotationPoint));
+                System.out.println(this.getGameBoard());
+
+                while (hasClusters(this.getCells())) {
+                    total += calculateTotal(findClusters(this.getCells()));
+
+                    System.out.println("Clear: ");
+                    clearClusters(this.getCells());
+                    System.out.println(this.getGameBoard());
+                    System.out.println(String.format(TOTAL_TEMPLATE, total));
+
+                    fallDown(this.getCells());
+                }
+                System.out.println(String.format("==== Turn # %s finished ===", turn++));
+            }
+        } while (turnFound);
+
+        return total;
+    }
+
+    private Pair<Integer, Long> findBestTurn(List<Pair<Integer, Long>> turns) {
+        notNull(turns);
+        isTrue(!turns.isEmpty());
+
+        Pair<Integer, Long> result = new Pair<Integer, Long>(-1, -1L);
+        for (Pair<Integer, Long> turn : turns) {
+            if (result.getSecond() < turn.getSecond()) {
+                result = turn;
+            }
+        }
+
+        notNull(result);
+        isTrue(result.getFirst() > -1);
+        isTrue(result.getSecond() > -1);
+        return result;
+    }
+
+    private List<Pair<Integer, Long>> findTurns(int[][] cells, int rotations) {
+        notNull(cells);
+        isTrue(rotations == 1 || rotations == 2);
+
+        List<Pair<Integer, Long>> turns = new ArrayList<Pair<Integer, Long>>();
+        for (int pointNumber = 0; pointNumber < ROTATION_POINTS.length; pointNumber++) {
+            if (!canRotate(cells, pointNumber)) {
+                continue;
+            }
+
+            int[][] rotated = rotateClockwise(cells, pointNumber);
+            if (rotations == 2) {
+                rotated = rotateClockwise(rotated, pointNumber);
+            }
+
+            if (hasClusters(rotated)) {
+                long totalFromCluster = calculateTotal(findClusters(rotated));
+                isTrue(totalFromCluster > 0);
+
+                turns.add(new Pair<Integer, Long>(pointNumber, totalFromCluster));
+            }
+        }
+
+        notNull(turns);
+        return turns;
+    }
+
     public String getGameBoard() {
         return String.format(BOARD_TEMPLATE, getColors(getCells()));
     }
@@ -179,7 +290,7 @@ public class HexicSolver {
         return 3 * new BigDecimal(3).pow(numberOfConnectedCells - MIN_CELLS_IN_CLUSTER).longValueExact();
     }
 
-    public long calculateTotal(ArrayList<Set<Integer>> clusters) {
+    public long calculateTotal(List<Set<Integer>> clusters) {
         notNull(clusters);
         isTrue(!clusters.isEmpty());
 
@@ -380,5 +491,23 @@ public class HexicSolver {
 
         notNull(target);
         return target;
+    }
+
+    private static class Pair<T, E> {
+        private T t;
+        private E e;
+
+        public Pair(T t, E e) {
+            this.t = t;
+            this.e = e;
+        }
+
+        public T getFirst() {
+            return t;
+        }
+
+        public E getSecond() {
+            return e;
+        }
     }
 }
