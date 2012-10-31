@@ -1,7 +1,12 @@
 package com.intetics;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
@@ -335,5 +340,17 @@ public class HexicSolver {
 
         notNull(result);
         return result;
+    }
+
+    private int[][] copy(int[][] input) {
+        notNull(input);
+
+        int[][] target = new int[input.length][];
+        for (int i=0; i <input.length; i++) {
+            target[i] = Arrays.copyOf(input[i], input[i].length);
+        }
+
+        notNull(target);
+        return target;
     }
 }
