@@ -65,8 +65,25 @@ public class HexicSolverFindClustersTest {
         solver.getCells()[58][6] = 1;
 
         System.out.println(solver.getGameBoard());
+
         List<Set<Integer>> clusters = solver.findClusters(solver.getCells());
         assertEquals(1, clusters.size());
         assertEquals(19, clusters.get(0).size());
+    }
+
+    @Test
+    public void testTwoClusters() {
+        solver.getCells()[45][6] = 1;
+        solver.getCells()[40][6] = 1;
+        solver.getCells()[50][6] = 1;
+        solver.getCells()[46][6] = 1;
+
+        solver.getCells()[84][6] = 2;
+        solver.getCells()[79][6] = 2;
+        solver.getCells()[74][6] = 2;
+
+        System.out.println(solver.getGameBoard());
+        List<Set<Integer>> clusters = solver.findClusters(solver.getCells());
+        assertEquals(2, clusters.size());
     }
 }
