@@ -144,7 +144,7 @@ public class HexicSolver {
     // [0] - cell #1
     // [1] - cell #2
     // [3] - cell #3
-    private final static int[][] ROTATION_POINTS = new int[][] {
+    public final static int[][] ROTATION_POINTS = new int[][] {
             {  0, 10,  5}, {  0,  6, 10}, {  1, 11,  6}, {  1,  7, 11}, {  2, 12,  7}, {  2,  8, 12}, {  3, 13,  8}, {  3,  9, 13}, {  4, 14,  9},
             {  5, 10, 15}, {  6, 16, 10}, {  6, 11, 16}, {  7, 17, 11}, {  7, 12, 17}, {  8, 18, 12}, {  8, 13, 18}, {  9, 19, 13}, {  9, 14, 19},
             { 10, 20, 15}, { 10, 16, 20}, { 11, 21, 16}, { 11, 17, 21}, { 12, 22, 17}, { 12, 18, 22}, { 13, 23, 18}, { 13, 19, 23}, { 14, 24, 19},
@@ -268,6 +268,17 @@ public class HexicSolver {
             targetCell[COLOR_INDEX] = cell[COLOR_INDEX];
             cell[COLOR_INDEX] = NO_COLOR;
         }
+    }
+
+
+    public boolean canRotate(int[][] cells, int pointNumber) {
+        isTrue(pointNumber >= 0);
+        isTrue(pointNumber < ROTATION_POINTS.length);
+
+        int[] point = ROTATION_POINTS[pointNumber];
+        return cells[point[0]][COLOR_INDEX] != NO_COLOR
+                && cells[point[1]][COLOR_INDEX] != NO_COLOR
+                && cells[point[2]][COLOR_INDEX] != NO_CELL;
     }
 
     private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
