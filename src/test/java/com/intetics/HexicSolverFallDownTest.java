@@ -430,4 +430,13 @@ public class HexicSolverFallDownTest {
                 "  \\_/ \\_/ \\_/ \\_/ \\_/",
                 solver.getGameBoard());
     }
+
+    @Test
+    public void testFallDownNoEmptyCells() {
+        solver.fillRandomColors(solver.getCells());
+        String boardBeforeFallDown = solver.getGameBoard();
+
+        solver.fallDown(solver.getCells());
+        assertEquals(boardBeforeFallDown, solver.getGameBoard());
+    }
 }
