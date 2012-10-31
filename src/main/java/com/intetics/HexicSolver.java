@@ -136,18 +136,6 @@ public class HexicSolver {
         return String.format(BOARD_TEMPLATE, getColors(getCells()));
     }
 
-    private String[] getColors(int[][] cells) {
-        notNull(cells);
-
-        String[] result = new String[NUMBER_OF_CELLS];
-        for (int i = 0; i < NUMBER_OF_CELLS; i++)  {
-            result[i] = cells[i][COLOR_INDEX] == -1 ? " " : String.valueOf(cells[i][COLOR_INDEX]);
-        }
-
-        notNull(result);
-        return result;
-    }
-
     public int[][] getCells() {
         notNull(cells);
         return cells;
@@ -244,5 +232,17 @@ public class HexicSolver {
         }
 
         return false;
+    }
+
+    private String[] getColors(int[][] cells) {
+        notNull(cells);
+
+        String[] result = new String[NUMBER_OF_CELLS];
+        for (int i = 0; i < NUMBER_OF_CELLS; i++)  {
+            result[i] = cells[i][COLOR_INDEX] == -1 ? " " : String.valueOf(cells[i][COLOR_INDEX]);
+        }
+
+        notNull(result);
+        return result;
     }
 }
