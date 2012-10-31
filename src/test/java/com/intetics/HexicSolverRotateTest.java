@@ -17,4 +17,13 @@ public class HexicSolverRotateTest {
             assertFalse(solver.canRotate(solver.getCells(), pointNumber));
         }
     }
+
+    @Test
+    public void testCanRotatePositive() {
+        solver.getCells()[31][6] = 1;
+        solver.getCells()[32][6] = 2;
+        solver.getCells()[33][6] = 3;
+
+        solver.canRotate(solver.getCells(), 56);
+    }
 }
