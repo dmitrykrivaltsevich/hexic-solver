@@ -281,6 +281,23 @@ public class HexicSolver {
                 && cells[point[2]][COLOR_INDEX] != NO_CELL;
     }
 
+    public int[][] rotateClockwise(int[][] cells, int pointNumber) {
+        notNull(cells);
+        isTrue(pointNumber >= 0);
+        isTrue(pointNumber < ROTATION_POINTS.length);
+        isTrue(canRotate(cells, pointNumber));
+
+        int[][] copy = copy(cells);
+        int[] point = ROTATION_POINTS[pointNumber];
+
+        int firstColor = copy[point[0]][COLOR_INDEX];
+        copy[point[0]][COLOR_INDEX] = copy[point[1]][COLOR_INDEX];
+        copy[point[1]][COLOR_INDEX] = copy[point[2]][COLOR_INDEX];
+        copy[point[2]][COLOR_INDEX] = firstColor;
+
+        return copy;
+    }
+
     private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
         notNull(cells);
         isTrue(cellNumber > -1);
