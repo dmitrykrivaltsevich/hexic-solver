@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class HexicSolverFindClustersTest {
@@ -85,5 +86,23 @@ public class HexicSolverFindClustersTest {
         System.out.println(solver.getGameBoard());
         List<Set<Integer>> clusters = solver.findClusters(solver.getCells());
         assertEquals(2, clusters.size());
+    }
+
+    @Test
+    public void testHasClustersEmptyCells() {
+        assertFalse(solver.hasClusters(solver.getCells()));
+    }
+
+    @Test
+    public void testHasClustersOneCluster() {
+        solver.getCells()[22][6] = 1;
+        solver.getCells()[18][6] = 1;
+        solver.getCells()[13][6] = 1;
+        solver.getCells()[9][6] = 1;
+        solver.getCells()[4][6] = 1;
+
+        System.out.println(solver.getGameBoard());
+
+        assertTrue(solver.hasClusters(solver.getCells()));
     }
 }

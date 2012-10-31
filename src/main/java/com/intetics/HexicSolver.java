@@ -174,6 +174,11 @@ public class HexicSolver {
         return distinct(clusters);
     }
 
+    public boolean hasClusters(int[][] cells) {
+        notNull(cells);
+        return !findClusters(cells).isEmpty();
+    }
+
     private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
         notNull(cells);
         isTrue(cellNumber > -1);
