@@ -10,9 +10,11 @@ public class HexicSolver {
 
     public final static Integer NUMBER_OF_CELLS = 85;
     public final static Integer COLOR_INDEX = 6;
+    public final static Integer BOTTOM_CELL_INDEX = 3;
     public final static Integer MIN_CELLS_IN_CLUSTER = 3;
     public final static Integer NUMBER_OF_COLORS = 9;
     public final static Integer NO_COLOR = -1;
+    public final static Integer NO_CELL = -1;
 
     private final static Random RANDOM = new Random(System.nanoTime());
 
@@ -211,6 +213,34 @@ public class HexicSolver {
         }
 
         isTrue(!hasClusters(cells));
+    }
+
+    public void fallDown(int[][] cells) {
+        notNull(cells);
+
+        for (int cellNumber = NUMBER_OF_CELLS - 10 - 1 /* 74 */; cellNumber >= 0; cellNumber--) {
+            int[] cell = cells[cellNumber];
+            int[] bottomCell = cells[cell[BOTTOM_CELL_INDEX]];
+
+            if (cell[COLOR_INDEX] == NO_COLOR) {
+                continue;
+            }
+
+            if (bottomCell[COLOR_INDEX] != NO_COLOR) {
+                continue;
+            }
+
+            int[] targetCell = bottomCell;
+            int nextTargetCellNumber = targetCell[BOTTOM_CELL_INDEX];
+            while (nextTargetCellNumber != NO_CELL && cells[nextTargetCellNumber][COLOR_INDEX] == NO_COLOR) {
+                targetCell = cells[nextTargetCellNumber];
+                nextTargetCellNumber = targetCell[BOTTOM_CELL_INDEX];
+            }
+
+            isTrue(targetCell[COLOR_INDEX] == NO_COLOR);
+            targetCell[COLOR_INDEX] = cell[COLOR_INDEX];
+            cell[COLOR_INDEX] = NO_COLOR;
+        }
     }
 
     private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
