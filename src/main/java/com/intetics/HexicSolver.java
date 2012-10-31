@@ -12,6 +12,7 @@ public class HexicSolver {
     public final static Integer COLOR_INDEX = 6;
     public final static Integer MIN_CELLS_IN_CLUSTER = 3;
     public final static Integer NUMBER_OF_COLORS = 9;
+    public final static Integer NO_COLOR = -1;
 
     private final static Random RANDOM = new Random(System.nanoTime());
 
@@ -183,6 +184,22 @@ public class HexicSolver {
         return !findClusters(cells).isEmpty();
     }
 
+    public void clearClusters(int[][] cells) {
+        notNull(cells);
+        if (!hasClusters(cells)) {
+            return;
+        }
+
+        List<Set<Integer>> clusters = findClusters(cells);
+        for (Set<Integer> cluster : clusters) {
+            for (Integer cellNumber : cluster) {
+                cells[cellNumber][COLOR_INDEX] = NO_COLOR;
+            }
+        }
+
+        isTrue(!hasClusters(cells));
+    }
+
     private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
         notNull(cells);
         isTrue(cellNumber > -1);
@@ -190,7 +207,7 @@ public class HexicSolver {
         notNull(cluster);
 
         int color = cells[cellNumber][COLOR_INDEX];
-        if (color == -1) {
+        if (color == NO_COLOR) {
             notNull(cluster);
             return cluster; // EARLY EXIT
         }
@@ -248,7 +265,7 @@ public class HexicSolver {
 
         String[] result = new String[NUMBER_OF_CELLS];
         for (int i = 0; i < NUMBER_OF_CELLS; i++)  {
-            result[i] = cells[i][COLOR_INDEX] == -1 ? " " : String.valueOf(cells[i][COLOR_INDEX]);
+            result[i] = cells[i][COLOR_INDEX] == NO_COLOR ? " " : String.valueOf(cells[i][COLOR_INDEX]);
         }
 
         notNull(result);
