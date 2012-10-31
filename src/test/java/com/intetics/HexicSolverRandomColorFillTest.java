@@ -2,6 +2,7 @@ package com.intetics;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -19,6 +20,14 @@ public class HexicSolverRandomColorFillTest {
         int[][] cells = solver.fillRandomColors(solver.getCells());
         for (int[] cell : cells) {
             assertTrue(cell[HexicSolver.COLOR_INDEX] != -1);
+        }
+    }
+
+    @Test
+    public void testNoClustersAfterFill() {
+        for (int i = 0; i < 100; i++) {
+            int[][] cells = solver.fillRandomColors(solver.getCells());
+            assertFalse(solver.hasClusters(cells));
         }
     }
 }

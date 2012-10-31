@@ -151,11 +151,15 @@ public class HexicSolver {
 
     public int[][] fillRandomColors(int[][] cells) {
         notNull(cells);
-        for (int[] cell : cells) {
-            notNull(cell);
-            cell[COLOR_INDEX] = RANDOM.nextInt(NUMBER_OF_COLORS + 1);
-        }
+        do {
+            for (int[] cell : cells) {
+                notNull(cell);
+                cell[COLOR_INDEX] = RANDOM.nextInt(NUMBER_OF_COLORS + 1);
+            }
+        } while (hasClusters(cells));
+
         notNull(cells);
+        isTrue(!hasClusters(cells));
         return cells;
     }
 
