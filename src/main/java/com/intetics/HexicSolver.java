@@ -150,6 +150,19 @@ public class HexicSolver {
         return 3 * new BigDecimal(3).pow(numberOfConnectedCells - MIN_CELLS_IN_CLUSTER).longValueExact();
     }
 
+    public long calculateTotal(ArrayList<Set<Integer>> clusters) {
+        notNull(clusters);
+        isTrue(!clusters.isEmpty());
+
+        long result = 0;
+        for (Set<Integer> cluster : clusters) {
+            result += calculatePoints(cluster.size());
+        }
+
+        isTrue(result > 0);
+        return result;
+    }
+
     public int[][] fillRandomColors(int[][] cells) {
         notNull(cells);
         do {
