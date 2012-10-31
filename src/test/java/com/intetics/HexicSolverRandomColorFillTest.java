@@ -21,6 +21,8 @@ public class HexicSolverRandomColorFillTest {
         for (int[] cell : cells) {
             assertTrue(cell[HexicSolver.COLOR_INDEX] != -1);
         }
+
+        System.out.println(solver.getGameBoard());
     }
 
     @Test
