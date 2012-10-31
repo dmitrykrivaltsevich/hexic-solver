@@ -1,8 +1,9 @@
 package com.intetics;
 
 import java.math.BigDecimal;
-import java.util.Random;
+import java.util.*;
 
+import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
 
 public class HexicSolver {
@@ -161,9 +162,87 @@ public class HexicSolver {
     }
 
     public int[][] fillRandomColors(int[][] cells) {
+        notNull(cells);
         for (int[] cell : cells) {
+            notNull(cell);
             cell[COLOR_INDEX] = RANDOM.nextInt(NUMBER_OF_COLORS + 1);
         }
+        notNull(cells);
         return cells;
+    }
+
+    public List<Set<Integer>> findClusters(int[][] cells) {
+        notNull(cells);
+        List<Set<Integer>> clusters = new ArrayList<Set<Integer>>();
+
+        for (int cellNumber = 0; cellNumber < NUMBER_OF_CELLS; cellNumber++) {
+            Set<Integer> cluster = makeCluster(cells, cellNumber, new HashSet<Integer>());
+            if (cluster.size() >= MIN_CELLS_IN_CLUSTER) {
+                clusters.add(cluster);
+            }
+        }
+
+        notNull(clusters);
+        return distinct(clusters);
+    }
+
+    private Set<Integer> makeCluster(int[][] cells, int cellNumber, Set<Integer> cluster) {
+        notNull(cells);
+        isTrue(cellNumber > -1);
+        isTrue(cellNumber < NUMBER_OF_CELLS);
+        notNull(cluster);
+
+        int color = cells[cellNumber][COLOR_INDEX];
+        if (color == -1) {
+            notNull(cluster);
+            return cluster; // EARLY EXIT
+        }
+
+        cluster.add(cellNumber);
+
+        for (int linkIndex = 0; linkIndex < 6; linkIndex++) {
+            int nextCell = cells[cellNumber][linkIndex];
+            if (nextCell == -1 || cluster.contains(nextCell) || cells[nextCell][COLOR_INDEX] != color) {
+                continue;
+            }
+
+            makeCluster(cells, nextCell, cluster);
+        }
+
+        notNull(cluster);
+        return cluster;
+    }
+
+    private List<Set<Integer>> distinct(List<Set<Integer>> clusters) {
+        notNull(clusters);
+        if (clusters.isEmpty()) {
+            return new ArrayList<Set<Integer>>(); // EARLY EXIT
+        }
+
+        List<Set<Integer>> distinctClusters = new ArrayList<Set<Integer>>();
+        for (Set<Integer> cluster : clusters) {
+            if (present(cluster, distinctClusters)) {
+                continue;
+            }
+            distinctClusters.add(cluster);
+        }
+
+        notNull(distinctClusters);
+        isTrue(!distinctClusters.isEmpty());
+        return distinctClusters;
+    }
+
+    private boolean present(Set<Integer> cluster, List<Set<Integer>> distinctClusters) {
+        notNull(cluster);
+        isTrue(!cluster.isEmpty());
+
+        Integer anyCellFromCluster = cluster.iterator().next();
+        for (Set<Integer> distinctCluster : distinctClusters) {
+            if (distinctCluster.contains(anyCellFromCluster)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
